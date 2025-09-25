@@ -7,13 +7,14 @@ import type { Task } from './types/Task';
 interface TaskListProps {
   tasks: Task[];
   onToggleTask: (id: number) => void;
+  onToggleFavorite: (id: number) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onToggleTask }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onToggleTask, onToggleFavorite }) => {
   return (
     <List>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onToggle={onToggleTask} />
+        <TaskItem key={task.id} task={task} onToggle={onToggleTask} onToggleFav={onToggleFavorite}/>
       ))}
     </List>
   );

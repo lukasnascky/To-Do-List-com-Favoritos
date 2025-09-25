@@ -6,9 +6,10 @@ import type { Task } from './types/Task';
 interface TaskItemProps {
   task: Task;
   onToggle: (id: number) => void;
+  onToggleFav: (id: number) => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onToggleFav }) => {
   return (
     <ListItem>
       <Checkbox checked={task.isDone} onChange={() => onToggle(task.id)} />
@@ -19,6 +20,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle }) => {
           color: task.isDone ? 'gray' : 'inherit'
         }}
       />
+      <Checkbox checked={task.isFavorite} onChange={() => onToggleFav(task.id)}/>
     </ListItem>
   );
 };
