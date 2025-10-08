@@ -1,48 +1,50 @@
-import type React from "react";
-import { createContext, useContext, useState, type ReactNode } from "react";
-import type { Task } from '../components/types/Task';
-import type { FavoritesContextType } from "../components/types/Favorites";
+import React, { createContext, useContext, useState, type ReactNode } from "react";
+import type { Task } from "../components/types/Task";
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined)
-
-interface FavoritesProviderProps {
-  children: ReactNode
+interface FavoritesContextType {
+  tasks: Task[];
+  favorites: Task[];
+  addTask: (task: Task) => void;
+  toggleDone: (id: number) => void;
+  toggleFavorite: (id: number) => void;
 }
 
-export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }) => {
-  const [favorites, setFavorites] = useState<Task[]>([])
+const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-  const addToFavorites = (item: Task): void => {
-    setFavorites((prev) => {
-      if (!prev.find((fav) => fav.id === item.id)) {
-        return [...prev, item]
-      }
-      return prev
-    })
-  }
+export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const removeFromFavorites = (id: number): void => {
-    setFavorites((prev) => prev.filter((item) => item.id !== id))
-  }
+  const addTask = (task: Task) => {
+    setTasks((prev) => [...prev, task]);
+  };
 
-  const isFavorite = (id: number): boolean => {
-    return favorites.some((item) => item.id === id)
-  }
+  const toggleDone = (id: number) => {
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === id ? { ...task, isDone: !task.isDone } : task
+      )
+    );
+  };
 
-  const value: FavoritesContextType = {
-    favorites,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
-  }
+  const toggleFavorite = (id: number) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, isFavorite: !task.isFavorite } : task
+      )
+    );
+  };
 
-  return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>
-}
+  const favorites = tasks.filter((t) => t.isFavorite);
+
+  return (
+    <FavoritesContext.Provider value={{ tasks, favorites, addTask, toggleFavorite, toggleDone }}>
+      {children}
+    </FavoritesContext.Provider>
+  );
+};
 
 export const useFavorites = (): FavoritesContextType => {
-  const context = useContext(FavoritesContext)
-  if (context === undefined) {
-    throw new Error("useFavorites must be used within a FavoritesProvider")
-  }
-  return context
-}
+  const context = useContext(FavoritesContext);
+  if (!context) throw new Error("useFavorites must be used within a FavoritesProvider");
+  return context;
+};

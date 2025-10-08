@@ -1,7 +1,8 @@
 import React from 'react';
-import { Checkbox, ListItem, ListItemText } from '@mui/material';
+import { Checkbox, ListItem, ListItemText, IconButton } from '@mui/material';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import type { Task } from './types/Task';
-
 
 interface TaskItemProps {
   task: Task;
@@ -20,7 +21,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onToggleFav }) => {
           color: task.isDone ? 'gray' : 'inherit'
         }}
       />
-      <Checkbox checked={task.isFavorite} onChange={() => onToggleFav(task.id)}/>
+      <IconButton onClick={() => onToggleFav(task.id)}>
+        {task.isFavorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+      </IconButton>
     </ListItem>
   );
 };

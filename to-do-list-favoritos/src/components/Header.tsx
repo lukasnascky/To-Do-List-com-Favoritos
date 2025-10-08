@@ -6,8 +6,8 @@ import Container from '@mui/material/Container';
 const Header: React.FC = () => {
     return (
         <Container maxWidth="sm" style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <Typography variant="h4" gutterBottom>
-                To Do List
+            <Typography variant="h3" gutterBottom>
+                TO DO LIST
             </Typography>
         </Container>
     );
